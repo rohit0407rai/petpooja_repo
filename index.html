@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Petpooja API</title>
+</head>
+<body>
+  <h1>Test Petpooja API</h1>
+  
+  <form id="petpoojaForm">
+    <label for="restaurantId">Restaurant ID:</label>
+    <input type="text" id="restaurantId" name="restaurantId" required>
+
+    <!-- Add other form fields as needed -->
+
+    <button type="submit">Send Data</button>
+  </form>
+
+  <script>
+    document.getElementById('petpoojaForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+
+      const restaurantId = document.getElementById('restaurantId').value;
+
+      // Simulate the data structure sent from Petpooja
+      const petpoojaData = {
+        success: '1',
+        restaurants: [
+          {
+            restaurantid: restaurantId,
+            // Add other restaurant details as needed
+          }
+        ],
+        // Add other data fields as needed
+      };
+
+      try {
+        const response = await fetch('http://localhost:3000/petpooja/menu/update', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(petpoojaData),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const responseData = await response.json();
+        console.log(responseData);
+      } catch (error) {
+        console.error('Error sending data to Petpooja API:', error.message);
+      }
+    });
+  </script>
+</body>
+</html>

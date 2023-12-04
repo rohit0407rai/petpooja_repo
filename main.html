@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toggle Stock Status</title>
+</head>
+<body>
+
+  <h2>Toggle Stock Status</h2>
+
+  <form id="toggleStockForm">
+    <label for="restID">Restaurant ID:</label>
+    <input type="text" id="restID" name="restID" required><br>
+
+    <label for="type">Type (item OR addon):</label>
+    <input type="text" id="type" name="type" required><br>
+
+    <label for="inStock">In Stock:</label>
+    <select id="inStock" name="inStock" required>
+      <option value="true">True</option>
+      <option value="false">False</option>
+    </select><br>
+
+    <label for="itemID">Item IDs (comma-separated):</label>
+    <input type="text" id="itemID" name="itemID" required><br>
+
+    <button type="button" onclick="toggleStockStatus()">submit</button>
+  </form>
+
+  <script>
+    async function toggleStockStatus() {
+      const form = document.getElementById('toggleStockForm');
+      const restID = form.restID.value;
+      const type = form.type.value;
+      const inStock = form.inStock.value;
+      const itemID = form.itemID.value.split(',').map(id => id.trim());
+      const requestBody = { restID, type, inStock, itemID };
+
+      try {
+        const response = await fetch('http://localhost:3000/toggleStockStatus', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(requestBody)
+        });
+
+        const result = await response.json();
+        alert(result.message);
+      } catch (error) {
+        console.error('Error:', error.message);
+        alert('An error occurred. Please check the console for details.');
+      }
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petpooja Dashboard Simulator</title>
+</head>
+<body>
+
+<h1>Petpooja Dashboard Simulator</h1>
+
+<form id="storeStatusForm">
+    <label for="restID">Restaurant ID:</label>
+    <input type="text" id="restID" name="restID" required>
+
+    <label for="status">Status:</label>
+    <input type="text" id="status" name="status" required>
+
+    <label for="storeStatus">Store Status:</label>
+    <input type="text" id="storeStatus" name="storeStatus" required>
+
+    <button type="button" onclick="sendStoreStatus()">Submit</button>
+</form>
+
+<script>
+function sendStoreStatus() {
+    const restID = document.getElementById('restID').value;
+    const status = document.getElementById('status').value;
+    const storeStatus = document.getElementById('storeStatus').value;
+
+    const data = {
+        restID: restID,
+        status: status,
+        store_status: storeStatus
+    };
+
+    // Make a POST request to the server
+    fetch('http://localhost:3000/getStoreStatus', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Server response:', data);
+        alert('Store status updated successfully!');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error updating store status');
+    });
+}
+</script>
+
+</body>
+</html>
