@@ -6,9 +6,21 @@ const app = express();
 const port = 3000; 
 
 app.use(bodyParser.json());
-
+const STATIC_BEARER_TOKEN = 'Bearer 77d865e9015053e539a90ce9964afacfa45e4acd31a1b996ea70b7bfacd0d67f';
+const STATIC_CLIENT_ID = '2c32f0d647472abac59c80d57f4b92fa96aa569b5f56925daa29cae919f57e3e';
 
 app.use(cors());
+app.use((req, res, next) => {
+  const bearerToken = req.headers.authorization;
+  const clientId = req.headers['client-id'];
+
+  // Verify Bearer Token and Client ID
+  if (bearerToken === STATIC_BEARER_TOKEN && clientId === STATIC_CLIENT_ID) {
+    next();
+  } else {
+    res.status(401).json({ message: 'Unauthorized' });
+  }
+});
 app.post('/petpooja/menu/update', (req, res) => {
   try {
     console.log('Request:', req);
