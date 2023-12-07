@@ -6,12 +6,12 @@ const app = express();
 const port = 3000; 
 
 app.use(bodyParser.json());
-app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.json({ limit: '100mb' }));
  const STATIC_BEARER_TOKEN = 'Bearer 77d865e9015053e539a90ce9964afacfa45e4acd31a1b996ea70b7bfacd0d67f';
 const STATIC_CLIENT_ID = '2c32f0d647472abac59c80d57f4b92fa96aa569b5f56925daa29cae919f57e3e';
 
 app.use(cors());
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '100mb' }));
 app.use((req, res, next) => {
   const bearerToken = req.headers.authorization;
   const clientId = req.headers['client-id'];
