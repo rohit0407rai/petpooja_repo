@@ -11,6 +11,7 @@ app.use(bodyParser.json({ limit: '10mb' }));
 const STATIC_CLIENT_ID = '2c32f0d647472abac59c80d57f4b92fa96aa569b5f56925daa29cae919f57e3e';
 
 app.use(cors());
+app.use(express.json({ limit: '10mb' }));
 app.use((req, res, next) => {
   const bearerToken = req.headers.authorization;
   const clientId = req.headers['client-id'];
