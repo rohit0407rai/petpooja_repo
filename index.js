@@ -65,7 +65,7 @@ app.post('/petpooja/menu/update', (req, res) => {
 });
 app.post('/toggleStockStatus', (req, res) => {
   // Extract data from the request body
-  const { restID, type, inStock, itemID } = req.body;
+  const { restID, type, inStock, itemID, autoTurnOnTime,customTurnOnTime } = req.body;
 
   // Perform necessary actions based on the data
   // (You can replace the console.log statements with your actual logic)
@@ -73,6 +73,8 @@ app.post('/toggleStockStatus', (req, res) => {
   console.log(`Received request for restaurant ID: ${restID}`);
   console.log(`Type: ${type}`);
   console.log(`In stock: ${inStock}`);
+  console.log(`AutoTurnOnTime: ${autoTurnOnTime}`);
+  console.log(`CustomTurnOnTime: ${customTurnOnTime}`);
   console.log(`Item IDs: ${itemID.join(', ')}`);
 
   // Respond with a success message
