@@ -5,13 +5,15 @@ const cors = require('cors');
 const app = express();
 const port = 3000; 
 
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 app.use(bodyParser.json({ limit: '100mb' }));
- const STATIC_BEARER_TOKEN = 'Bearer 77d865e9015053e539a90ce9964afacfa45e4acd31a1b996ea70b7bfacd0d67f';
+const STATIC_BEARER_TOKEN = 'Bearer 77d865e9015053e539a90ce9964afacfa45e4acd31a1b996ea70b7bfacd0d67f';
 const STATIC_CLIENT_ID = '2c32f0d647472abac59c80d57f4b92fa96aa569b5f56925daa29cae919f57e3e';
 
 app.use(cors());
 app.use(express.json({ limit: '100mb' }));
+app.use(express.urlencoded({ limit: '100mb'}));
+
 app.use((req, res, next) => {
   const bearerToken = req.headers.authorization;
   const clientId = req.headers['client-id'];
@@ -23,6 +25,30 @@ app.use((req, res, next) => {
     res.status(401).json({ message: 'Unauthorized' });
   }
 });
+app.use((req, res, next) => {
+  // Check if the route needs data splitting
+  if (req.originalUrl === '/petpooja/menu/update') {
+    // Split the data as needed
+    // For example, split the array into chunks of size 10
+    if (req.body && req.body.items && Array.isArray(req.body.items)) {
+      const chunkSize = 10;
+      req.body.items = chunkArray(req.body.items, chunkSize);
+      // console.log("Hawai dunia hai meri");
+      // console.log(req.body.items);
+    }
+  }
+
+  // Continue to the next middleware or route
+  next();
+});
+function chunkArray(array, chunkSize) {
+  const result = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    result.push(array.slice(i, i + chunkSize));
+  }
+  
+  return result;
+}
 app.post('/petpooja/menu/update', (req, res) => {
   try {
     console.log('Request:', req);
