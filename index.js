@@ -105,11 +105,11 @@ app.post('/toggleStockStatus', (req, res) => {
     // Your logic here
 
     // If the logic is successful, respond with a success message
-    res.json({code: '200', status: 'success', message: 'Stock status updated successfully' });
+    res.json({code: 200, status: 'success', message: 'Stock status updated successfully' });
   } catch (error) {
     // If there is an error, respond with an error message
     console.error(`Error processing request: ${error.message}`);
-    res.json({code: '500', success: 'failed',  message: 'Error updating stock status' });
+    res.json({code: 500, success: 'failed',  message: 'Error updating stock status' });
   }
 });
 
@@ -150,11 +150,11 @@ app.post('/updateStoreStatus', (req, res) => {
     // Your logic here
 
     // If the logic is successful, respond with a success message including restID
-    res.status(200).json({ http_code: '200', status: 'success', message: `Store Status updated successfully for store ${restID}` });
+    res.status(200).json({ http_code: 200, status: 'success', message: `Store Status updated successfully for store ${restID}` });
   } catch (error) {
     // If there is an error, respond with an error message
     console.error(`Error processing request: ${error.message}`);
-    res.status(500).json({  http_code: '500',status: 'success', message: 'Error updating store status' });
+    res.status(500).json({  http_code: 500,status: 'success', message: 'Error updating store status' });
   }
 });
 
