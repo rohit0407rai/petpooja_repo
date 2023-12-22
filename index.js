@@ -49,20 +49,62 @@ function chunkArray(array, chunkSize) {
   
   return result;
 }
-app.post('/petpooja/menu/update', (req, res) => {
-  try {
-    console.log('Request:', req);
+// app.post('/petpooja/menu/update', (req, res) => {
+//   try {
+//     console.log('Request:', req);
   
-    const requestData = req.body;
-    console.log("Hawai dunia");
-    console.log('Request data:', requestData);
-    res.json({ success: "1", message: 'Menu items are successfully listed.' });
-  } catch (error) {
-    // Handle errors
-    console.error('Error processing Petpooja data:', error);
-    res.status(500).json({ success: "0", message: 'Internal Server Error' });
-  }
-});
+//     const requestData = req.body;
+//     console.log("Hawai dunia");
+//     console.log('Request data:', requestData);
+//     res.json({ success: "1", message: 'Menu items are successfully listed.' });
+//   } catch (error) {
+//     // Handle errors
+//     console.error('Error processing Petpooja data:', error);
+//     res.status(500).json({ success: "0", message: 'Internal Server Error' });
+//   }
+// });
+
+let postedDataArray = [];
+app.route('/petpooja/menu/update')
+  .post((req, res) => {
+    try {
+      // Get data from the request body
+      const requestData = req.body;
+
+      // Process the posted data (update menu)
+      console.log('Posted data:', requestData);
+
+      // Assuming you have some logic to update the menu using requestData
+
+      // Store the posted data in the array
+      postedDataArray.length = 0;
+      postedDataArray.push(requestData);
+
+      // Send a response for the update
+      res.json({ success: "1", message: 'Menu items are successfully listed.' });
+
+    } catch (error) {
+      // Handle errors
+      console.error('Error processing Petpooja data:', error);
+      res.status(500).json({ success: "0", message: 'Menu sync failed' });
+    }
+  })
+  .get((req, res) => {
+    try {
+      if (postedDataArray.length > 0) {
+        // Send the previously posted data as a response for the GET request
+        res.json({ success: "1", message: 'Menu items successfully fetched.', data: postedDataArray });
+      } else {
+        res.json({ success: "0", message: 'No data available.' });
+      }
+
+    } catch (error) {
+      // Handle errors
+      console.error('Error fetching Petpooja menu data:', error);
+      res.status(500).json({ success: "0", message: 'Internal Server Error' });
+    }
+  });
+
 // app.post('/toggleStockStatus', (req, res) => {
 //   // Extract data from the request body
 //   const { restID, type, inStock, itemID, autoTurnOnTime,customTurnOnTime } = req.body;
@@ -118,7 +160,7 @@ app.post('/getStoreStatus', (req, res) => {
   console.log(`Received request for restaurant ID: ${restID}`);
   console.log(`Status: ${status}`);
   console.log(`store_statis: ${store_status}`);
-  res.json({ success: '1', message: 'Store status getted successfully' });
+  res.json({ "http_code":200,"status":"success","store_status":"1","message":"Store Delivery Status fetched successfully" });
 });
 // app.post('/updateStoreStatus', (req, res) => {
 //   const { restID,  store_status,reason, turn_on_time } = req.body;

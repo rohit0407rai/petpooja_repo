@@ -1,0 +1,186 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fetch Data from API</title>
+</head>
+<body>
+
+<button id="fetchDataBtn">Fetch Data</button>
+<div id="result"></div>
+
+<script>
+document.getElementById('fetchDataBtn').addEventListener('click', fetchData);
+
+function fetchData() {
+  const token = 'Bearer 77d865e9015053e539a90ce9964afacfa45e4acd31a1b996ea70b7bfacd0d67f'; // Replace with your actual token
+  const clientId = '2c32f0d647472abac59c80d57f4b92fa96aa569b5f56925daa29cae919f57e3e'; // Replace with your actual client ID
+
+  fetch('http://localhost:3000/petpooja/menu/update', {
+    headers: {
+      'authorization': token,
+      'client-id': clientId,
+      'Content-Type': 'application/json', // You may need to set other headers as required
+    }
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.success === '1') {
+        displayData(data.data);
+      } else {
+        displayError(data.message);
+      }
+    })
+    .catch(error => {
+      displayError('Failed to fetch data. Check the console for details.');
+      console.error(error);
+    });
+}
+
+function displayData(data) {
+  const resultDiv = document.getElementById('result');
+  resultDiv.innerHTML = '<h3>Menu Data</h3>';
+  
+  if (data) {
+    for (const key in data) {
+      resultDiv.innerHTML += `<p><strong>${key}:</strong> ${data[key]}</p>`;
+    }
+  } else {
+    resultDiv.innerHTML += '<p>No data available.</p>';
+  }
+}
+
+function displayError(message) {
+  const resultDiv = document.getElementById('result');
+  resultDiv.innerHTML = `<p style="color: red;">Error: ${message}</p>`;
+}
+</script>
+
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fetch Data from API</title>
+</head>
+<body>
+
+<button id="fetchDataBtn">Fetch Data</button>
+<div id="result"></div>
+
+<script>
+document.getElementById('fetchDataBtn').addEventListener('click', fetchData);
+
+function fetchData() {
+  const token = 'Bearer 77d865e9015053e539a90ce9964afacfa45e4acd31a1b996ea70b7bfacd0d67f'; // Replace with your actual token
+  const clientId = '2c32f0d647472abac59c80d57f4b92fa96aa569b5f56925daa29cae919f57e3e'; // Replace with your actual client ID
+
+  fetch('http://localhost:3000/petpooja/menu/update', {
+    headers: {
+      'authorization': token,
+      'client-id': clientId,
+      'Content-Type': 'application/json',
+    }
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.success === '1') {
+        displayData(data.data);
+      } else {
+        displayError(data.message);
+      }
+    })
+    .catch(error => {
+      displayError('Failed to fetch data. Check the console for details.');
+      console.error(error);
+    });
+}
+
+function displayData(data) {
+  const resultDiv = document.getElementById('result');
+  resultDiv.innerHTML = '<h3>Menu Data</h3>';
+
+  if (data && data.restaurants) {
+    const restaurants = data.restaurants;
+    
+    for (const restaurant of restaurants) {
+      resultDiv.innerHTML += `<h4>Restaurant ID: ${restaurant.restaurantid}</h4>`;
+      resultDiv.innerHTML += `<p><strong>Active:</strong> ${restaurant.active}</p>`;
+      resultDiv.innerHTML += `<p><strong>Menu Sharing Code:</strong> ${restaurant.details.menusharingcode}</p>`;
+      resultDiv.innerHTML += `<p><strong>Currency:</strong> ${restaurant.details.currency_html}</p>`;
+      resultDiv.innerHTML += `<p><strong>Country:</strong> ${restaurant.details.country}</p>`;
+      resultDiv.innerHTML += `<p><strong>Restaurant Name:</strong> ${restaurant.details.restaurantname}</p>`;
+      resultDiv.innerHTML += `<p><strong>Address:</strong> ${restaurant.details.address}</p>`;
+      // Add more details as needed
+    }
+  } else {
+    resultDiv.innerHTML += '<p>No restaurant data available.</p>';
+  }
+
+  if (data && data.categories) {
+    const categories = data.categories;
+    
+    for (const category of categories) {
+      resultDiv.innerHTML += `<h4>Category ID: ${category.categoryid}</h4>`;
+      resultDiv.innerHTML += `<p><strong>Active:</strong> ${category.active}</p>`;
+      resultDiv.innerHTML += `<p><strong>Category Rank:</strong> ${category.categoryrank}</p>`;
+      resultDiv.innerHTML += `<p><strong>Category Name:</strong> ${category.categoryname}</p>`;
+      // Add more details as needed
+    }
+  } else {
+    resultDiv.innerHTML += '<p>No category data available.</p>';
+  }
+  if (data && data.items) {
+    const itemArrays = data.items;
+
+    // Loop through the array of arrays
+    for (const itemsArray of itemArrays) {
+      // Loop through the inner array containing item objects
+      for (const item of itemsArray) {
+        resultDiv.innerHTML += `<p><strong>Item ID:</strong> ${item.itemid || 'N/A'}</p>`;
+        resultDiv.innerHTML += `<p><strong>Item Name:</strong> ${item.itemname || 'N/A'}</p>`;
+        resultDiv.innerHTML += `<p><strong>Price:</strong> ${item.price || 'N/A'}</p>`;
+        resultDiv.innerHTML += `<p><strong>Active:</strong> ${item.active || 'N/A'}`;
+      }
+    }
+  } else {
+    resultDiv.innerHTML += '<p>No item data available.</p>';
+  }
+}
+  
+
+if (data && data.addongroups) {
+  const addons = data.addongroups;
+   
+  for (const addon of addons) {
+    resultDiv.innerHTML += `<p><strong>Addon Name:</strong> ${addon.addongroupid}</p>`;
+    resultDiv.innerHTML += `<p><strong>Price:</strong> ${addon.active}</p>`;
+    resultDiv.innerHTML += `<p><strong>Active:</strong> ${addon.addongroup_rank}</p>`;
+    // Add more details as needed
+  }
+} else {
+  resultDiv.innerHTML += '<p>No addon data available.</p>';
+}
+
+
+function displayError(message) {
+  const resultDiv = document.getElementById('result');
+  resultDiv.innerHTML = `<p style="color: red;">Error: ${message}</p>`;
+}
+</script>
+
+</body>
+</html>
