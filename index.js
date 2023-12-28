@@ -201,6 +201,26 @@ app.post('/updateStoreStatus', (req, res) => {
   }
 });
 
+app.post('/receiveOrder', async (req, res) => {
+  try {
+    const orderData = req.body;
+    console.log('Received order data:', orderData);
+
+    const response = await axios.post('https://pponlineordercb.petpooja.com/save_order', orderData);
+
+    console.log('Response from other server:', response.data);
+
+    res.status(200).json({
+      success: true,
+      message: 'Order data received and forwarded successfully.',
+      responseData: response.data, 
+    });
+  } catch (error) {
+    console.error('Error processing order data:', error);
+    res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+});
+
 
 // Start the server
 app.listen(port, () => {
