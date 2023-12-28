@@ -206,7 +206,7 @@ app.post('/receiveOrder', async (req, res) => {
     const orderData = req.body;
     console.log('Received order data:', orderData);
 
-    const response = await axios.post('https://pponlineordercb.petpooja.com/save_order', orderData);
+    const response = await axios.post('https://47pfzh5sf2.execute-api.ap-southeast-1.amazonaws.com/V1/save_order', orderData);
 
     console.log('Response from other server:', response.data);
 
