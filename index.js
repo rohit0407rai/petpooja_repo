@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors'); 
-const got = require('got');
 const axios= require('axios');
 const app = express();
 const port = 3000; 
@@ -202,50 +201,28 @@ app.post('/updateStoreStatus', (req, res) => {
   }
 });
 
-// app.post('/receiveOrder', async (req, res) => {
-//   try {
-//     const orderData = req.body;
-//     console.log('Received order data:', orderData);
-
-//     const response = await axios.post('https://pponlineordercb.petpooja.com/save_order', orderData);
-
-//     console.log('Response from other server:', response.data);
-
-//     res.status(200).json({
-//       success: '1',
-//       message: 'Order data received and forwarded successfully.',
-//       responseData: response.data, 
-//     });
-//   } catch (error) {
-//     console.error('Error processing order data:', error);
-//     res.status(500).json({ success: '0', message: 'Internal server error.' });
-//   }
-// });
-
-
 app.post('/receiveOrder', async (req, res) => {
   try {
     const orderData = req.body;
     console.log('Received order data:', orderData);
 
-    // Make a POST request using 'got'
-    const response = await got.post('https://pponlineordercb.petpooja.com/save_order', {
-      json: orderData, // Automatically serializes JSON data
-      responseType: 'json', // Automatically parses JSON response
-    });
+    const response = await axios.post('https://pponlineordercb.petpooja.com/save_order', orderData);
 
-    console.log('Response from other server:', response.body);
+    console.log('Response from other server:', response.data);
 
     res.status(200).json({
       success: '1',
       message: 'Order data received and forwarded successfully.',
-      responseData: response.body,
+      responseData: response.data, 
     });
   } catch (error) {
     console.error('Error processing order data:', error);
     res.status(500).json({ success: '0', message: 'Internal server error.' });
   }
 });
+
+
+
 
 
 // // Start the server
