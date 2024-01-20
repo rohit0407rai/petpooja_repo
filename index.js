@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors'); 
 const axios= require('axios');
-const { default: fetch } = require('node-fetch');
+import fetch from 'node-fetch';
 const app = express();
 const port = 3000; 
 
