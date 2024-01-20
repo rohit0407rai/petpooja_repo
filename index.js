@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors'); 
 const axios= require('axios');
 const app = express();
+const fetch = require('node-fetch');
 const port = 3000; 
 
 // app.use(bodyParser.json());
@@ -201,19 +202,49 @@ app.post('/updateStoreStatus', (req, res) => {
   }
 });
 
+// app.post('/receiveOrder', async (req, res) => {
+//   try {
+//     const orderData = req.body;
+//     console.log('Received order data:', orderData);
+
+//     const response = await axios.post('https://pponlineordercb.petpooja.com/save_order', orderData);
+
+//     console.log('Response from other server:', response.data);
+
+//     res.status(200).json({
+//       success: '1',
+//       message: 'Order data received and forwarded successfully.',
+//       responseData: response.data, 
+//     });
+//   } catch (error) {
+//     console.error('Error processing order data:', error);
+//     res.status(500).json({ success: '0', message: 'Internal server error.' });
+//   }
+// });
+
+
+
 app.post('/receiveOrder', async (req, res) => {
   try {
     const orderData = req.body;
     console.log('Received order data:', orderData);
 
-    const response = await axios.post('https://pponlineordercb.petpooja.com/save_order', orderData);
+    const response = await fetch('https://pponlineordercb.petpooja.com/save_order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(orderData),
+    });
 
-    console.log('Response from other server:', response.data);
+    const responseData = await response.json();
+
+    console.log('Response from other server:', responseData);
 
     res.status(200).json({
       success: '1',
       message: 'Order data received and forwarded successfully.',
-      responseData: response.data, 
+      responseData: responseData,
     });
   } catch (error) {
     console.error('Error processing order data:', error);
@@ -222,7 +253,9 @@ app.post('/receiveOrder', async (req, res) => {
 });
 
 
-// Start the server
+
+// // Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
