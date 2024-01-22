@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors'); 
 const axios= require('axios');
+const admin = require('firebase-admin');
 const app = express();
 const port = 3000; 
 
@@ -9,6 +10,24 @@ const port = 3000;
 app.use(bodyParser.json({ limit: '100mb' }));
 const STATIC_BEARER_TOKEN = 'Bearer 77d865e9015053e539a90ce9964afacfa45e4acd31a1b996ea70b7bfacd0d67f';
 const STATIC_CLIENT_ID = '2c32f0d647472abac59c80d57f4b92fa96aa569b5f56925daa29cae919f57e3e';
+const serviceAccount = require('./petpooja-aef99-firebase-adminsdk-yvwma-25ab019a6c.json');
+
+try {
+    admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+        apiKey: "AIzaSyCc49GAiMtE8eE2k_lHR3AIb1NgsggxAIY",
+        authDomain: "petpooja-aef99.firebaseapp.com",
+        projectId: "petpooja-aef99",
+        storageBucket: "petpooja-aef99.appspot.com",
+        messagingSenderId: "641584974476",
+        appId: "1:641584974476:web:2699998df5ca63761509a9",
+        measurementId: "G-G5Q3FPVN59"
+    });
+} catch (error) {
+    console.error('Firebase initialization error', error.stack);
+}
+
+const db = admin.firestore();
 
 app.use(cors());
 app.use(express.json({ limit: '100mb' }));
@@ -223,7 +242,42 @@ app.post('/receiveOrder', async (req, res) => {
 
 
 
+app.post('/petpooja-callback', async (req, res) => {
+  try {
+    const { restID, orderID, status, cancel_reason, minimum_prep_time, minimum_delivery_time, rider_name, rider_phone_number, is_modified } = req.body;
 
+    // Process the data as needed
+    console.log('Received callback from Pet Pooja:');
+    console.log('Restaurant ID:', restID);
+    console.log('Order ID:', orderID);
+    console.log('Status:', status);
+    console.log('minimum_prep_time:', minimum_prep_time);
+    console.log('minimum_delivery_time:', minimum_delivery_time);
+    console.log('Total Time', minimum_prep_time + minimum_delivery_time);
+
+    // Query the Firestore collection to find the document with the given order ID
+    const querySnapshot = await db.collection('Orders').where('orderID', '==', orderID).get();
+
+    // Check if the document exists
+    if (querySnapshot.empty) {
+      // If the order does not exist, create a new order
+      await db.collection('Orders').add(req.body);
+      console.log('Order created successfully');
+    } else {
+      // If the order exists, update the existing order
+      const docRef = querySnapshot.docs[0].ref;
+      await docRef.update(req.body);
+      console.log('Order updated successfully');
+    }
+
+    // Send a response to acknowledge receipt
+    const responseMessage = `Callback received successfully for Order ${orderID} at Restaurant ${restID} with status ${status}.`;
+    res.status(200).json({ message: responseMessage });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 // // Start the server
 app.listen(port, () => {
